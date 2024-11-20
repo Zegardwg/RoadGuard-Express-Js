@@ -88,3 +88,42 @@ app.post('/pelaporan', (req, res) => {
   });
 });
 
+// GET route untuk mengambil semua data dari tabel users
+app.get('/users', (req, res) => {
+  const query = 'SELECT * FROM users';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching users: ', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// GET route untuk mengambil semua data dari tabel jenis_lubang
+app.get('/jenis-lubang', (req, res) => {
+  const query = 'SELECT * FROM jenis_lubang';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching jenis lubang: ', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// GET route untuk mengambil semua data dari tabel pelaporan
+app.get('/pelaporan', (req, res) => {
+  const query = 'SELECT * FROM pelaporan';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching pelaporan: ', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
