@@ -13,26 +13,78 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-// POST route untuk membuat item baru
-app.post('/items', (req, res) => {
-  const { name, value } = req.body;
+// 1. Create User
+app.post('/users', (req, res) => {
+  const { name, email } = req.body;
 
-  // Validasi input
-  if (!name || !value) {
-    return res.status(400).json({ message: 'Name and Value are required' });
+  if (!name || !email) {
+    return res.status(400).json({ message: 'Name and Email are required' });
   }
 
-  // Query SQL untuk insert data
-  const query = 'INSERT INTO items (name, value) VALUES (?, ?)';
-  db.query(query, [name, value], (err, result) => {
+  const query = 'INSERT INTO users (name, email) VALUES (?, ?)';
+  db.query(query, [name, email], (err, result) => {
     if (err) {
-      console.error('Error inserting data: ', err);
+      console.error('Error inserting user: ', err);
       return res.status(500).json({ message: 'Database error' });
     }
 
     res.status(201).json({
-      message: 'Item created successfully',
-      item: { id: result.insertId, name, value },
+      message: 'User created successfully',
+      user: { id: result.insertId, name, email },
     });
   });
 });
+
+// POST route untuk menambahkan Jenis Lubang baru
+app.post('/jenis-lubang', (req, res) => {
+  const { jenis, deskripsi } = req.body;
+
+  if (!jenis || !deskripsi) {
+    return res.status(400).json({ message: 'Jenis and Deskripsi are required' });
+  }
+
+  const query = 'INSERT INTO jenis_lubang (jenis, deskripsi) VALUES (?, ?)';
+  db.query(query, [jenis, deskripsi], (err, result) => {
+    if (err) {
+      console.error('Error inserting jenis lubang: ', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    res.status(201).json({
+      message: 'Jenis Lubang created successfully',
+      jenisLubang: { id: result.insertId, jenis, deskripsi },
+    });
+  });
+});
+
+
+// POST route untuk membuat laporan
+app.post('/pelaporan', (req, res) => {
+  const { nama_pelapor, jenis_lubang, lokasi, deskripsi } = req.body;
+
+  // Validasi input
+  if (!nama_pelapor || !jenis_lubang || !lokasi || !deskripsi) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  // Query SQL untuk insert data
+  const query = 'INSERT INTO pelaporan (nama_pelapor, jenis_lubang, lokasi, deskripsi) VALUES (?, ?, ?, ?)';
+  db.query(query, [nama_pelapor, jenis_lubang, lokasi, deskripsi], (err, result) => {
+    if (err) {
+      console.error('Error inserting laporan: ', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    res.status(201).json({
+      message: 'Laporan created successfully',
+      laporan: { 
+        id: result.insertId, 
+        nama_pelapor, 
+        jenis_lubang, 
+        lokasi, 
+        deskripsi 
+      },
+    });
+  });
+});
+
